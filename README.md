@@ -31,9 +31,9 @@ Chapter_N
   └── ...
 ```
 
-Note that the organization of the files may not exactly follow the structure of the original repository. I have written the code in a way that helps me better understand and learn the content.
+Note that the organization of the files may not exactly follow the structure of the book's original repository. I have written the code in a way that is comfortable and helps me better understand and learn the content.
 
 ## Disclaimer
 
-I am not responsible for any errors or issues arising from the use of this code. I have published my learning experience, comments, and additional code in the hope that it may be useful to others.
+I do not accept any responsibility for errors or issues that may arise from the use of this code. This repository is published with the intention of sharing my learning experience, comments, and additional code, which I hope may be useful to others. 
 
