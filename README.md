@@ -35,5 +35,5 @@ Note that the organization of the files may not exactly follow the structure of 
 
 ## Disclaimer
 
-I do not accept any responsibility for errors or issues that may arise from the use of this code. This repository is published with the intention of sharing my learning experience, comments, and additional code, which I hope may be useful to others. 
+I do not accept any responsibility for errors or issues that may arise from the use of this code. This repository intention is of sharing my learning experience, comments, and additional code, which I hope may be useful to others. 
 
