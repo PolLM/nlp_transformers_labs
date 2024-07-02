@@ -3,8 +3,10 @@ from transformers import pipeline
 import pandas as pd 
 import torch
 
+# Set the device to GPU if available
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
+#Original text from the book
 text = """Dear Amazon, last week I ordered an Optimus Prime action figure \
 from your online store in Germany. Unfortunately, when I opened the package, \
 I discovered to my horror that I had been sent an action figure of Megatron \
@@ -23,7 +25,8 @@ I was struck by it. Totally got me. And it stil does, 7 years later. This is the
 ever made for me. Because of the feeling it gives me, no other movie can. So hard to get all 
 of this emotion in only one movie. Brilliant.
 '''
-
+# The base models are trained on Englisht text, there is not a check to
+# verify the language and load a multilingual model. 
 text_interstellar_cat = '''
 Que ens arribin des de Hollywood cintes tan espectaculars, originals 
 i volgudament èpiques com INTERSTELLAR és sens dubte un miracle del que ens hem d’alegrar 
