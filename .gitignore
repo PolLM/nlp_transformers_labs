@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#any file or folder ending with .hf
+*.hf
+
 # C extensions
 *.so
 
