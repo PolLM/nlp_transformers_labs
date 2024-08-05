@@ -6,6 +6,9 @@ __pycache__/
 #any file or folder ending with .hf
 *.hf
 
+# the data/models folder
+data/models/
+
 # C extensions
 *.so
 
