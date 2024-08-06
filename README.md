@@ -22,7 +22,7 @@ The files are organized by chapter as follows:
 
 ```
 Chapter_1
-  ├── 1_topic.py
+  ├── 1_topic.ipynb
   ├── 2_topic.py
   └── ...
 Chapter_2
