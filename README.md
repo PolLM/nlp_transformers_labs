@@ -33,7 +33,15 @@ Chapter_N
 
 Note that the organization of the files may not exactly follow the structure of the book's original repository. I have written the code in a way that is comfortable and helps me better understand and learn the content.
 
+### Additional Setup
+
+To run the notebooks, you may need to create the following folders and files:
+
+- **Folders:** `data/models` and `data/datasets`
+- **.env file:** This file should contain environment variables like `PROJECT_DIR`.
+
+I have ignored these folders and the `.env` file to avoid pushing local environment variables, secrets, and large files such as datasets and models.
+
 ## Disclaimer
 
-I do not accept any responsibility for errors or issues that may arise from the use of this code. This repository intention is of sharing my learning experience, comments, and additional code, which I hope may be useful to others. 
-
+I do not accept any responsibility for errors or issues that may arise from the use of this code. This repository's intention is to share my learning experience, comments, and additional code, which I hope may be useful to others.
