@@ -1,4 +1,5 @@
-The notebook 2_queries_keys_values.ipynb does not load well on the withub browser (I guess because there are LateX expressions), so I add them here: 
+The notebook 2_queries_keys_values.ipynb does not load well on the withub browser (I guess because there are LateX expressions), so I add them here.
+I recommend downloading the notebook, since the last equations in this file are also not well loaded in the browser.
 
 ### Queries, Keys and Values
 
