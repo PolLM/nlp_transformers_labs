@@ -32,4 +32,4 @@ $$where \sum_{j = 1}^{seq\_length} w_{ij} = 1 \quad \forall i  $$
 
 $$ X^{'} =  \begin{bmatrix} x^{'}_1 \\ x^{'}_2 \\ \vdots \\ x^{'}_{seq\_length} \end{bmatrix} = W \cdot V = \begin{bmatrix} w_{1,1} & w_{1,2} & \cdots & w_{1,seq\_length} \\ w_{2,1} & w_{2,2} & \cdots & w_{2,seq\_length} \\ \vdots & \vdots & \ddots & \vdots \\ w_{seq\_length,1} & w_{seq\_length,2} & \cdots & w_{seq\_length,seq\_length} \end{bmatrix} \begin{bmatrix} v_1 \\ v_2 \\ \vdots \\ v_{seq\_length} \end{bmatrix} $$
 
-$$so, \quad x^{'}_i = \sum_{j = 1}^{seq\_length} w_{ij} \cdot v_j $$
+$$ so, \quad x^{'}_i = \sum_{j = 1}^{seq\_length} w_{ij} \cdot v_j $$
