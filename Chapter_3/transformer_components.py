@@ -3,6 +3,8 @@ import torch
 import torch.nn.functional as F
 import math
 
+# WARRNING: Maybe some namings differ from the book, I tried to write it myself toe classes and then compared the results
+
 
 def scaled_dot_product_attention(
         query: torch.Tensor,
@@ -16,7 +18,7 @@ def scaled_dot_product_attention(
     return torch.matmul(att_weights, value)
 
 
-#Maybe some namings differ from the book, I tried to write it myself to learn it better
+
 class AttentionHead(torch.nn.Module):
 
     def __init__(self, embedding_dim, head_dim):
@@ -66,10 +68,54 @@ class MultiHeadAttention(torch.nn.Module):
         x = self.out_linear(x)
         return(x)
 
+# 1d convolution / position-wise feed forward 2 layer NN
+class FeedForward(torch.nn.Module):
+
+    def __init__(self, embedding_dim, latent_dim, dropout_ratio):
+        super().__init__()
+        self.layer1 = torch.nn.Linear(embedding_dim, latent_dim)
+        self.layer2 = torch.nn.Linear(latent_dim, embedding_dim)
+        self.dropout = torch.nn.Dropout(dropout_ratio)
+
+
+    def forward(self, x):
+        x = self.layer1(x)
+        x = torch.nn.functional.gelu(x)
+        x = self.layer2(x)
+        x = self.dropout(x)
+        return(x)
+    
+
+# Creating a Transformer Encoder Layer
+class TransformerencoderLayer(torch.nn.Module):
+
+    def __init__(self, embedding_dim, attn_n_heads, ff_latent_dim, ff_dropout_ratio):
+        super().__init__()
+        self.multi_head_attn = MultiHeadAttention(embedding_dim, attn_n_heads)
+        self.ff = FeedForward(embedding_dim, ff_latent_dim, ff_dropout_ratio)
+
+        # We need to instantiate two different layer norms because we have learnable parameters, since by default elementwise_affine=True
+        self.layer_norm1 = torch.nn.LayerNorm(embedding_dim)
+        self.layer_norm2 = torch.nn.LayerNorm(embedding_dim)
+
+    def forward(self, x):
+        y = self.layer_norm1(x)
+        y = self.multi_head_attn(y)
+        x = y + x
+
+        y = self.layer_norm2(x)
+        y = self.ff(y)
+        x = y + x 
+
+        return(x)
+    
+
 
 #%%
 if __name__ == "__main__":
     from transformers import AutoTokenizer, AutoConfig
+
+    ### Testing the attention heads implementation
 
     # Load config and tokenizer from model
     model_ckpt = "bert-base-uncased"
@@ -85,8 +131,33 @@ if __name__ == "__main__":
     # Let's try to run the multihead attention layer
     multihead_attn = MultiHeadAttention(config.hidden_size, config.num_attention_heads)
     attn_output = multihead_attn(inputs_embeds)
+    print("Testing the attention heads implementation")
     print(attn_output.size())
-    print(attn_output)
+
+    ### Testing the FF layer
+
+    # Instantiating the net
+    feed_forward = FeedForward(
+        config.hidden_size,
+        config.intermediate_size,
+        config.hidden_dropout_prob
+    )
+
+    ff_outputs = feed_forward(attn_output)
+    print("Testing the FF layer")
+    print(ff_outputs.size())
+
+    ### Testing TransformerencoderLayer
+    encoder_layer = TransformerencoderLayer(
+        config.hidden_size,
+        config.num_attention_heads,
+        config.intermediate_size,
+        config.hidden_dropout_prob
+    )
+
+    el_outputs = encoder_layer(inputs_embeds)
+    print("Testing TransformerencoderLayer")
+    print(el_outputs.shape)
 
 
 # %%
