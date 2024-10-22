@@ -109,7 +109,74 @@ class TransformerencoderLayer(torch.nn.Module):
 
         return(x)
     
+# Creating the embeddings class, regular + positional ones
+class Embeddings(torch.nn.Module):
 
+    def __init__(self, vocab_size, max_pos_emb, embedding_dim, emb_dropout_ratio):
+        super().__init__()
+
+        self.regular_embedding = torch.nn.Embedding(vocab_size, embedding_dim)
+        self.positional_embedding = torch.nn.Embedding(max_pos_emb, embedding_dim)
+
+        self.layer_norm = torch.nn.LayerNorm(embedding_dim, eps=1e-12)
+        self.dropout = torch.nn.Dropout(emb_dropout_ratio) #??? book is setting it default
+
+    def forward(self, input_ids):
+        # Get the vocab embedings
+        reg_emb = self.regular_embedding(input_ids)
+        # Get the position embeddings
+        input_positions = torch.arange(input_ids.size(1), dtype=torch.long).unsqueeze(0)
+        pos_emb = self.positional_embedding(input_positions)
+        # Combine embeddings
+        embs = reg_emb + pos_emb
+        # Layer normalization, why we are not doing very fancy stuff ???
+        embs = self.layer_norm(embs)
+        # Dropout
+        embs + self.dropout(embs)
+        return(embs)
+
+# The Full Encoder!
+class TransformerEncoder(torch.nn.Module):
+
+    def __init__(
+            self, 
+            vocab_size, 
+            max_pos_emb, 
+            embedding_dim, 
+            emb_dropout_ratio, 
+            attn_n_heads, 
+            ff_latent_dim,
+            ff_dropout_ratio,
+            num_trans_enc_layers
+            ):
+        
+        super().__init__()
+        self.embedding_layer = Embeddings(
+            vocab_size, 
+            max_pos_emb, 
+            embedding_dim,
+            emb_dropout_ratio
+        )
+
+        self.encoder_layers = torch.nn.ModuleList(
+            [
+                TransformerencoderLayer(
+                    embedding_dim, 
+                    attn_n_heads, 
+                    ff_latent_dim, 
+                    ff_dropout_ratio
+                ) 
+                for _ in range(num_trans_enc_layers)
+            ]
+        )
+    
+
+    def forward(self, input_ids):
+
+        x = self.embedding_layer(input_ids)
+        for layer in self.encoder_layers:
+            x = layer(x)
+        return(x)
 
 #%%
 if __name__ == "__main__":
@@ -159,5 +226,31 @@ if __name__ == "__main__":
     print("Testing TransformerencoderLayer")
     print(el_outputs.shape)
 
+    ### Testing embedding layer
+    embedding_layer = Embeddings(
+        config.vocab_size,
+        config.max_position_embeddings,
+        config.hidden_size,
+        config.hidden_dropout_prob
+    )
+    emb_outputs = embedding_layer(inputs.input_ids)
+    print("Testing Embedding layer")
+    print(emb_outputs.shape)
 
+    ### Testing the full encoder
+    transformer_encoder = TransformerEncoder(
+        config.vocab_size, 
+        config.max_position_embeddings,
+        config.hidden_size,
+        config.hidden_dropout_prob, # I am setting the embedding dropout to config.hidden_dropout_prob, the book leaves the default, which is 0.5 and I think is too much
+        config.num_attention_heads,
+        config.intermediate_size,
+        config.hidden_dropout_prob,
+        config.num_hidden_layers
+    )
+
+    trans_output = transformer_encoder(inputs.input_ids)
+    print("Testing TransformerEncoder!!!!")
+    print(trans_output.shape)
+    print(trans_output)
 # %%
