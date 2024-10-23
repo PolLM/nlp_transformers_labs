@@ -7,9 +7,9 @@ import math
 
 
 def scaled_dot_product_attention(
-        query: torch.Tensor,
-        key: torch.Tensor,
-        value: torch.Tensor
+        query,
+        key,
+        value
         ) -> torch.Tensor : 
 
     dim_k = query.size(-1)
@@ -24,14 +24,14 @@ class AttentionHead(torch.nn.Module):
     def __init__(self, embedding_dim, head_dim):
         super().__init__()
 
-        self.quey = torch.nn.Linear(embedding_dim, head_dim)
+        self.query = torch.nn.Linear(embedding_dim, head_dim)
         self.key = torch.nn.Linear(embedding_dim, head_dim)
         self.value = torch.nn.Linear(embedding_dim, head_dim)
 
     def forward(self, input_embedding):
 
         updated_embedding = scaled_dot_product_attention(
-            self.quey(input_embedding),
+            self.query(input_embedding),
             self.key(input_embedding),
             self.value(input_embedding)
         )
@@ -87,7 +87,7 @@ class FeedForward(torch.nn.Module):
     
 
 # Creating a Transformer Encoder Layer
-class TransformerencoderLayer(torch.nn.Module):
+class TransformerEncoderLayer(torch.nn.Module):
 
     def __init__(self, embedding_dim, attn_n_heads, ff_latent_dim, ff_dropout_ratio):
         super().__init__()
@@ -160,7 +160,7 @@ class TransformerEncoder(torch.nn.Module):
 
         self.encoder_layers = torch.nn.ModuleList(
             [
-                TransformerencoderLayer(
+                TransformerEncoderLayer(
                     embedding_dim, 
                     attn_n_heads, 
                     ff_latent_dim, 
@@ -215,7 +215,7 @@ if __name__ == "__main__":
     print(ff_outputs.size())
 
     ### Testing TransformerencoderLayer
-    encoder_layer = TransformerencoderLayer(
+    encoder_layer = TransformerEncoderLayer(
         config.hidden_size,
         config.num_attention_heads,
         config.intermediate_size,
