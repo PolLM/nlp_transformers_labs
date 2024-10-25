@@ -46,7 +46,7 @@ class MultiHeadSelfAttention(pt.nn.Module):
         super().__init__()
 
         if config.embedding_dim % config.num_self_attn_heads != 0:
-            raise ValueError(f"embedding dimension {config.embedding_dim} is not divisible by num_heads {num_heads}")
+            raise ValueError(f"embedding dimension {config.embedding_dim} is not divisible by num_heads {config.num_self_attn_heads}")
         
         head_dim = config.embedding_dim // config.num_self_attn_heads
 
@@ -115,7 +115,7 @@ class Embeddings(pt.nn.Module):
         self.positional_embedding = pt.nn.Embedding(config.max_pos_emb, config.embedding_dim)
 
         self.layer_norm = pt.nn.LayerNorm(config.embedding_dim, eps=1e-12)
-        self.dropout = pt.nn.Dropout(config.emb_dropout_ratio) #??? book is setting it default
+        self.dropout = pt.nn.Dropout(config.emb_dropout_ratio) #??? book is setting it default, default is 0.5, too large ???
 
     def forward(self, input_ids):
         # Get the vocab embedings
